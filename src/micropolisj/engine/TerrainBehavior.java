@@ -111,16 +111,16 @@ class TerrainBehavior extends TileBehavior
 
 		if (city.floodCnt != 0)
 		{
-			for (int z = 0; z < 4; z++)
+			for (int z = 0; z < 4; z++) // loop through 4 neighboring tiles
 			{
-				if (PRNG.nextInt(8) == 0) {
+				if (PRNG.nextInt(8) == 0) { // 1/8 chance of flooring
 					int xx = xpos + DX[z];
 					int yy = ypos + DY[z];
-					if (city.testBounds(xx, yy)) {
+					if (city.testBounds(xx, yy)) { // in city limits?
 						int t = city.getTile(xx, yy);
-						if (isCombustible(t)
-							|| t == DIRT
-							|| (t >= WOODS5 && t < FLOOD))
+						if (isCombustible(t) // is ... combustible?
+							|| t == DIRT // is dirt?
+							|| (t >= WOODS5 && t < FLOOD)) //
 						{
 							if (isZoneCenter(t)) {
 								city.killZone(xx, yy, t);

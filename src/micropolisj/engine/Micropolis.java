@@ -152,6 +152,7 @@ public class Micropolis
 
 	int crimeAverage;
 	int pollutionAverage;
+	int pollutionAveragePrevious; // pollution average of the frame before the current frame (for park thing)
 	int landValueAverage;
 	int trafficAverage;
 
@@ -1132,10 +1133,25 @@ public class Micropolis
 			return 0;
 		}
 	}
+	// count park trees
+	int parkTreeCount()
+	{
+		int howManyTree = 0; // start with 0
+		for (int w = 0; w < getWidth(); w++) { // scan the map
+			for (int h = 0; h < getHeight(); h++) {
+				int tile = getTile(w, h); // get the number for the current tile
+				if (tile >= WOODS2 && tile <= WOODS5) { // if it's woods, count it as a park block
+					howManyTree++;
+				}
+			}
+		}
+		return howManyTree; // stop the function
+	}
 
 	//power, terrain, land value
 	void ptlScan()
 	{
+		int howManyTree = parkTreeCount(); // get the number of trees by running tree count function
 		final int qX = (getWidth()+3)/4;
 		final int qY = (getHeight()+3)/4;
 		int [][] qtem = new int[qY][qX];
@@ -1176,7 +1192,7 @@ public class Micropolis
 				}
 
 				if (plevel < 0)
-					plevel = 250; //?
+					plevel = 0; //?
 
 				if (plevel > 255)
 					plevel = 255;
@@ -1223,12 +1239,15 @@ public class Micropolis
 			for (int y = 0; y < HWLDY; y++)
 			{
 				int z = tem[y][x];
-				pollutionMem[y][x] = z;
+				pollutionMem[y][x] = z - howManyTree; // pollution is affected now by parks
+				if (pollutionMem[y][x] < 0) {
+					pollutionMem[y][x] = 0;
+				}
 
 				if (z != 0)
 				{
 					pcount++;
-					ptotal += z;
+					ptotal += pollutionMem[y][x];
 
 					if (z > pmax ||
 						(z == pmax && PRNG.nextInt(4) == 0))
@@ -2582,6 +2601,11 @@ public class Micropolis
 		case 35:
 			if (pollutionAverage > 60) { // FIXME, consider changing threshold to 80
 				sendMessage(MicropolisMessage.HIGH_POLLUTION);
+				pollutionAveragePrevious = pollutionAverage;
+			}
+			if (pollutionAveragePrevious > 60 && pollutionAverage <=60) {
+				sendMessage(MicropolisMessage.LOW_POLLUTION);
+				pollutionAveragePrevious = pollutionAverage;
 			}
 			break;
 		case 42:

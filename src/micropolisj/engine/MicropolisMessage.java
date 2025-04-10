@@ -24,6 +24,7 @@ public enum MicropolisMessage
 	NEED_SEAPORT,          //   8            doMessages           1/20
 	NEED_AIRPORT,          //   9            doMessages
 	HIGH_POLLUTION,        //  10            doMessages           1/20
+	LOW_POLLUTION,
 	HIGH_CRIME,            //  11            doMessages           1/19
 	HIGH_TRAFFIC,          //  12            doMessages           1/20
 	NEED_FIRESTATION,      //  13            doMessages           1/19
@@ -75,6 +76,7 @@ public enum MicropolisMessage
 	POP_500K_REACHED.useNotificationPane = true;
 	HIGH_CRIME.useNotificationPane = true;
 	HIGH_POLLUTION.useNotificationPane = true;
+	LOW_POLLUTION.useNotificationPane = true;
 
 	// location-specific
 	FLOOD_REPORT.useNotificationPane = true;
